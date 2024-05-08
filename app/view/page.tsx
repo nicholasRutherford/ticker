@@ -36,25 +36,7 @@ const getManifoldData = async (slug: string) => {
   return response.json();
 };
 
-const parseMarketText = (marketText: string): string[] => {
-  const urlRegex = /(?:https?:\/\/)?manifold\.markets\/(\w+)\/([^?/]+)/;
-
-  return marketText
-    .split(",")
-    .map((url) => url.trim())
-    .filter((url) => urlRegex.test(url))
-    .map((url) => {
-      const match = url.match(urlRegex);
-      if (match) {
-        return match[2];
-      }
-      return "";
-    })
-    .filter((slug) => slug !== "");
-};
-
-export default function Home() {
-  const [marketText, setMarketText] = useState<string>("");
+export default function ViewPage() {
   const [marketSlugs, setMarketSlugs] = useState<string[]>([]);
   const [marketData, setMarketData] = useState<any[]>([]);
   const [transformedData, setTransformedData] = useState<any[]>([]);
@@ -62,21 +44,10 @@ export default function Home() {
   useEffect(() => {
     // Load market slugs from local storage on component mount
     const savedMarketSlugs = localStorage.getItem("marketSlugs");
-    const savedMarketText = localStorage.getItem("marketText");
-    if (savedMarketSlugs && savedMarketText) {
+    if (savedMarketSlugs) {
       setMarketSlugs(JSON.parse(savedMarketSlugs));
-      setMarketText(JSON.parse(savedMarketText));
     }
   }, []);
-
-  useEffect(() => {
-    if (marketText !== "") {
-      const parsedSlugs = parseMarketText(marketText);
-      setMarketSlugs(parsedSlugs);
-      localStorage.setItem("marketSlugs", JSON.stringify(parsedSlugs));
-      localStorage.setItem("marketText", JSON.stringify(marketText));
-    }
-  }, [marketText]);
 
   useEffect(() => {
     const fetchMarketData = async () => {
@@ -105,20 +76,6 @@ export default function Home() {
   return (
     <div>
       <StockTicker marketData={transformedData} speed={30} />
-
-      <div className="mt-6">
-        <ThemeSwitch />
-
-        <Textarea
-          label="Manifold Markets"
-          description="CSV separated list of manifold market urls"
-          placeholder="https://manifold.markets/strutheo/will-the-11foot88-bridge-claim-a-fo,https://manifold.markets/SG/manifold-stock-permanent"
-          className="max-w-lg"
-          minRows={10}
-          value={marketText}
-          onValueChange={setMarketText}
-        />
-      </div>
     </div>
   );
 }

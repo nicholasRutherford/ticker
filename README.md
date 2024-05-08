@@ -49,3 +49,9 @@ After modifying the `.npmrc` file, you need to run `pnpm install` again to ensur
 ## License
 
 Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
+
+## Example:
+
+```
+https://manifold.markets/strutheo/will-the-11foot88-bridge-claim-a-fo,https://manifold.markets/strutheo/will-nyc-have-used-at-least-115-gal,https://manifold.markets/SG/manifold-stock-permanent
+```
