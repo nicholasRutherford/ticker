@@ -1,18 +1,11 @@
 "use client";
-import { Link } from "@nextui-org/link";
-import { Snippet } from "@nextui-org/snippet";
-import { Code } from "@nextui-org/code";
-import { button as buttonStyles } from "@nextui-org/theme";
-import { siteConfig } from "@/config/site";
-import { title, subtitle } from "@/components/primitives";
-import { GithubIcon } from "@/components/icons";
+
 import { Textarea } from "@nextui-org/react";
-import { Button, ButtonGroup } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { ThemeSwitch } from "@/components/theme-switch";
 import StockTicker from "@/components/stock-ticker";
 
-export const getStonkPriceAtProb = (prob: number) => {
+const getStonkPriceAtProb = (prob: number) => {
   const cappedProb = Math.min(Math.max(prob, 0.0001), 0.9999);
   const logTerm = Math.log(cappedProb / (1 - cappedProb));
   const maxTerm = Math.max(logTerm, cappedProb);
@@ -88,6 +81,14 @@ export default function Home() {
 
     if (marketSlugs.length > 0) {
       fetchMarketData();
+
+      // Set up interval to re-fetch market data every 10 seconds
+      const interval = setInterval(fetchMarketData, 10000);
+
+      // Clean up the interval on component unmount
+      return () => {
+        clearInterval(interval);
+      };
     }
   }, [marketSlugs]);
 
